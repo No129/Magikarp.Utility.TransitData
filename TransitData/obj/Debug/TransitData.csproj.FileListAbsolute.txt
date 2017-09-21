@@ -1,0 +1,4 @@
+C:\_TOHU\Workspace\Magikarp\_Shared\Magikarp\Magikarp.Utility.TransitData.dll
+C:\_TOHU\Workspace\Magikarp\_Shared\Magikarp\Magikarp.Utility.TransitData.pdb
+C:\_TOHU\Workspace\Magikarp\Transit-Data\TransitData\obj\Debug\Magikarp.Utility.TransitData.dll
+C:\_TOHU\Workspace\Magikarp\Transit-Data\TransitData\obj\Debug\Magikarp.Utility.TransitData.pdb
