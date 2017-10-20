@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -29,35 +30,49 @@ namespace Magikarp.Utility.TransitData
         /// <remarks>
         /// Author: 黃竣祥
         /// Time: 2017/10/20
-        /// History: N/A
+        /// History: 
+        ///     參考 https://goo.gl/eXCfHh 解說，調整增加項目方式。 (黃竣祥 2017/10/20)
         /// DB Object: N/A      
         /// </remarks>
         public override void SetValue(object pi_objContainer, PropertyInfo pi_objProperty, XElement pi_objValue)
         {
             string sType = pi_objValue.Attribute("Type").Value;
+            var listType = typeof(List<>);
+            var genericArgs = pi_objProperty.PropertyType.GetGenericArguments();
+            var concreteType = listType.MakeGenericType(genericArgs);
+            var newList = Activator.CreateInstance(concreteType);
+            var addMethod = concreteType.GetMethod("Add");
 
-            switch (sType)
+            switch (Type.GetTypeCode(genericArgs[0]))
             {
-                case "System.String":
-                    List<string> objList = new List<string>();
-
+                case TypeCode.String:
                     foreach (XElement objElement in pi_objValue.Elements())
                     {
-                        objList.Add(objElement.Value);
+                        addMethod.Invoke(newList, new object[] { objElement.Value });
                     }
-                    pi_objProperty.SetValue(pi_objContainer, objList, null);
                     break;
 
-                case "System.Xml.Linq.XElement":
-                    List<XElement> objXElementList = new List<XElement>();
-
+                case TypeCode.Boolean:
                     foreach (XElement objElement in pi_objValue.Elements())
                     {
-                        objXElementList.Add(XElement.Parse(objElement.Value));
+                        addMethod.Invoke(newList, new object[] { Boolean.Parse(objElement.Value) });
                     }
-                    pi_objProperty.SetValue(pi_objContainer, objXElementList, null);
+                    break;
+
+                default:
+                    switch (sType)
+                    {
+                        case "System.Xml.Linq.XElement":
+                            foreach (XElement objElement in pi_objValue.Elements())
+                            {
+                                addMethod.Invoke(newList, new object[] { XElement.Parse(objElement.Value) });
+                            }
+                            break;
+                    }
                     break;
             }
+
+            pi_objProperty.SetValue(pi_objContainer, newList);
         }
 
         /// <summary>
@@ -69,7 +84,8 @@ namespace Magikarp.Utility.TransitData
         /// <remarks>
         /// Author: 黃竣祥
         /// Time: 2017/10/20
-        /// History: N/A
+        /// History: 
+        ///     調整設值方式並新增 Boolean 項目。 (黃竣祥 2017/10/20)
         /// DB Object: N/A      
         /// </remarks>
         public override XElement Export(object pi_objContainer, PropertyInfo pi_objProperty)
@@ -103,26 +119,43 @@ namespace Magikarp.Utility.TransitData
                     case 2:// 填入屬性值。
                         Type tArg = pi_objProperty.PropertyType.GetGenericArguments()[0];
 
-                        switch (tArg.FullName.ToString())
+                        switch (Type.GetTypeCode(tArg))
                         {
-                            case "System.String":
-                                List<string> objList = (List<string>)pi_objProperty.GetValue(pi_objContainer, System.Reflection.BindingFlags.Default, null, null, null);
+                            case TypeCode.String:
+                                List<string> objStringList = (List<string>)pi_objProperty.GetValue(pi_objContainer, System.Reflection.BindingFlags.Default, null, null, null);
 
-                                objReturn = new XElement(sTagName, new XAttribute("Type", "System.String"));
-                                foreach (string sItem in objList)
+                                objReturn = new XElement(sTagName, new XAttribute("Type", "String"));
+
+                                foreach (string sItem in objStringList)
                                 {
                                     objReturn.Add(new XElement("Item", sItem));
                                 }
                                 break;
 
-                            case "System.Xml.Linq.XElement":
-                                List<XElement> objXElementList = (List<XElement>)pi_objProperty.GetValue(pi_objContainer, System.Reflection.BindingFlags.Default, null, null, null);
+                            case TypeCode.Boolean:
+                                List<Boolean> objBooleanList = (List<Boolean>)pi_objProperty.GetValue(pi_objContainer, System.Reflection.BindingFlags.Default, null, null, null);
 
-                                objReturn = new XElement(sTagName, new XAttribute("Type", "System.Xml.Linq.XElement"));
-                                foreach (XElement objItem in objXElementList)
+                                objReturn = new XElement(sTagName, new XAttribute("Type", "Boolean"));
+                                foreach (Boolean sItem in objBooleanList)
                                 {
-                                    objReturn.Add(new XElement("Item", new XCData(objItem.ToString())));
+                                    objReturn.Add(new XElement("Item", sItem.ToString()));
                                 }
+                                break;
+
+                            default:
+                                switch (tArg.FullName.ToString())
+                                {
+                                    case "System.Xml.Linq.XElement":
+                                        List<XElement> objXElementList = (List<XElement>)pi_objProperty.GetValue(pi_objContainer, System.Reflection.BindingFlags.Default, null, null, null);
+
+                                        objReturn = new XElement(sTagName, new XAttribute("Type", "System.Xml.Linq.XElement"));
+                                        foreach (XElement objItem in objXElementList)
+                                        {
+                                            objReturn.Add(new XElement("Item", new XCData(objItem.ToString())));
+                                        }
+                                        break;
+                                }
+
                                 break;
                         }
                         break;
