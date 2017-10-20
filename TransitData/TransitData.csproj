@@ -53,6 +53,7 @@
     <Compile Include="_Source\_Converters\EmptyConverter.cs" />
     <Compile Include="_Source\_Converters\EnumConverter.cs" />
     <Compile Include="_Source\_Converters\IntegerConverter.cs" />
+    <Compile Include="_Source\_Converters\ListConverter.cs" />
     <Compile Include="_Source\_Converters\LongConverter.cs" />
     <Compile Include="_Source\_Converters\ShortConverter.cs" />
     <Compile Include="_Source\_Converters\SingleConverter.cs" />

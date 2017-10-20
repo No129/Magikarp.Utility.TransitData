@@ -90,8 +90,25 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.When("要求轉換為字串中介資料", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 11
- testRunner.Then("得到字串中介資料", "<Root>\r\n\t<Name>Tomozou Huang</Name>\r\n\t<Level>1</Level>\r\n\t<Title>Staff</Title>\r\n</" +
-                    "Root>", ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("得到字串中介資料", @"<Root>
+  <Name>Tomozou Huang</Name>
+  <Level>1</Level>
+  <Title>Staff</Title>
+  <TEL Type=""System.String"">
+	<Item>abc</Item>
+	<Item>def</Item>
+  </TEL>
+  <ToDoList Type=""System.Xml.Linq.XElement"">
+	<Item><![CDATA[<Root>
+  <Title>ToDo1</Title>
+  <Description>Do Something.</Description>
+</Root>]]></Item>
+	<Item><![CDATA[<Root>
+  <Title>2</Title>
+  <Description>Do Something 2</Description>
+</Root>]]></Item>
+  </ToDoList>
+</Root>", ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -102,13 +119,13 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void 轉字串中介資料為Employee資料物件()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("轉字串中介資料為 Employee 資料物件", ((string[])(null)));
-#line 20
+#line 34
 this.ScenarioSetup(scenarioInfo);
 #line hidden
-#line 21
- testRunner.Given("字串中介資料", "<Root>\r\n\t<Name>Tomozou Huang</Name>\r\n\t<Level>1</Level>\r\n\t<Title>Staff</Title>\r\n</" +
-                    "Root>", ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 29
+#line 35
+ testRunner.Given("字串中介資料", "<Root>\r\n\t<Name>Tomozou Huang</Name>\r\n\t<Level>1</Level>\r\n\t<Title>Staff</Title>\t\t\r\n" +
+                    "</Root>", ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 43
  testRunner.When("要求轉換為 Employee 資料物件", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -119,8 +136,35 @@ this.ScenarioSetup(scenarioInfo);
                         "Tomozou Huang",
                         "1",
                         "Staff"});
-#line 30
+#line 44
  testRunner.Then("得到 Employee 資料物件", ((string)(null)), table2, "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("轉字串清單資料物件")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "TransitDataAdapter")]
+        public virtual void 轉字串清單資料物件()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("轉字串清單資料物件", ((string[])(null)));
+#line 48
+this.ScenarioSetup(scenarioInfo);
+#line hidden
+#line 49
+ testRunner.Given("字串中介資料", "<Root>\t\t\t\r\n\t<TEL Type=\"System.String\">\r\n\t\t<Item>abc</Item>\r\n\t\t<Item>def</Item>\r\n\t" +
+                    "</TEL>\r\n</Root>", ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 58
+ testRunner.When("要求轉換為 Employee 資料物件", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "TEL"});
+            table3.AddRow(new string[] {
+                        "abc"});
+            table3.AddRow(new string[] {
+                        "def"});
+#line 59
+ testRunner.Then("得到 Employee 資料物件包含電話清單", ((string)(null)), table3, "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

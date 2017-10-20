@@ -64,6 +64,7 @@
     </Compile>
     <Compile Include="_Source\EmployeeInfo.cs" />
     <Compile Include="_Source\TitleEnum.cs" />
+    <Compile Include="_Source\ToDoInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

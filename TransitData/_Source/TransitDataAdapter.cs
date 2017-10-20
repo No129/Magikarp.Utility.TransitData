@@ -13,7 +13,7 @@ namespace Magikarp.Utility.TransitData
     /// </summary>
     /// <remarks>
     /// Author: 黃竣祥
-    /// Version: 20170921
+    /// Version: 20171020
     /// </remarks>
     public class TransitDataAdapter : ITransitDataAdapter<string>, ITransitDataAdapter<XElement>, ITransitDataAdapter<object>
     {
@@ -26,6 +26,15 @@ namespace Magikarp.Utility.TransitData
 
         #region -- 建構/解構 ( Constructors/Destructor ) --
 
+        /// <summary>
+        /// 建構元。
+        /// </summary>
+        /// <remarks>
+        /// Author: 黃竣祥
+        /// Time: 2017/10/20
+        /// History: N/A
+        /// DB Object: N/A      
+        /// </remarks>
         public TransitDataAdapter()
         {
             this.l_objPropertyConverters.Add("String", new StringConverter());
@@ -38,6 +47,7 @@ namespace Magikarp.Utility.TransitData
             this.l_objPropertyConverters.Add("DateTime", new DateConverter());
             this.l_objPropertyConverters.Add("XDocument", new XDocumentConverter());
             this.l_objPropertyConverters.Add("Enum", new EnumConverter());
+            this.l_objPropertyConverters.Add("IList", new ListConverter());
         }
 
         #endregion     
@@ -209,7 +219,7 @@ namespace Magikarp.Utility.TransitData
         /// DB Object: N/A      
         /// </remarks>
         public TModel Loading<TModel>(object pi_objSource) where TModel : new()
-        {          
+        {
             TModel objReturn = default(TModel);
 
             if (pi_objSource.GetType() == typeof(string))
@@ -284,7 +294,8 @@ namespace Magikarp.Utility.TransitData
         /// <remarks>
         /// Author: 黃竣祥
         /// Time: 2017/09/21
-        /// History: N/A
+        /// History: 
+        ///     加上 List 處理。 (黃竣祥 2017/10/20)
         /// DB Object: N/A      
         /// </remarks>
         private IDataConverter<XElement> FindConverter(System.Reflection.PropertyInfo pi_objProperty)
@@ -298,6 +309,11 @@ namespace Magikarp.Utility.TransitData
             else if (this.l_objPropertyConverters.ContainsKey(pi_objProperty.PropertyType.Name))
             {
                 objReturn = this.l_objPropertyConverters[pi_objProperty.PropertyType.Name];
+
+            }
+            else if (pi_objProperty.PropertyType.IsGenericType && pi_objProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                objReturn = this.l_objPropertyConverters["IList"];
             }
 
             return objReturn;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TransitDataUT
 {
@@ -47,5 +48,9 @@ namespace TransitDataUT
         /// DB Object: N/A      
         /// </remarks>
         public TitleEnum Title { get; set; }
+
+        public List<string> TEL { get; set; }
+
+        public List<XElement > ToDoList { get; set; }
     }
 }

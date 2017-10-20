@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\TransitDataUT"
   ],
+  "SelectedNode": "\\TransitDataUT\\App.config",
   "PreviewInSolutionExplorer": false
 }

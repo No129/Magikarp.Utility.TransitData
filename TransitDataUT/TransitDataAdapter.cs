@@ -5,6 +5,7 @@ using System.Text;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Xml.Linq;
 
 namespace TransitDataUT
 {
@@ -14,7 +15,24 @@ namespace TransitDataUT
         [Given(@"僱員資料")]
         public void Given僱員資料(Table table)
         {
-            ScenarioContext.Current.Set<EmployeeInfo>(table.CreateInstance<EmployeeInfo>(), "Employee");
+            EmployeeInfo objEmployeeInfo = table.CreateInstance<EmployeeInfo>();
+            List<XElement> xeToDoList = new List<XElement>();
+            List<ToDoInfo> objToDoList = new List<ToDoInfo>();
+            ToDoInfo objToDoInfo1 = new ToDoInfo() { Title = "ToDo1", Description = "Do Something." };
+            ToDoInfo objToDoInfo2 = new ToDoInfo() { Title = "2", Description = "Do Something 2" };
+
+            objEmployeeInfo.TEL = new List<string>() { "abc", "def" };
+            objToDoList.Add(objToDoInfo1);
+            objToDoList.Add(objToDoInfo2);
+            
+            foreach(ToDoInfo objToDo in objToDoList)
+            {
+                XElement objElement = XElement.Parse(new Magikarp.Utility.TransitData.TransitDataAdapter().Export<ToDoInfo>(objToDo));
+                xeToDoList.Add(objElement);
+            }
+            objEmployeeInfo.ToDoList = xeToDoList;
+
+            ScenarioContext.Current.Set<EmployeeInfo>(objEmployeeInfo , "Employee");
         }
 
         [Given(@"字串中介資料")]
@@ -56,9 +74,24 @@ namespace TransitDataUT
         public void Then得到Employee資料物件(Table table)
         {
             EmployeeInfo objActual = ScenarioContext.Current.Get<EmployeeInfo>("Result");
-            
+                       
             table.CompareToInstance<EmployeeInfo>(objActual);
         }
+
+        [Then(@"得到 Employee 資料物件包含電話清單")]
+        public void Then得到Employee資料物件包含電話清單(Table table)
+        {
+            EmployeeInfo objActual = ScenarioContext.Current.Get<EmployeeInfo>("Result");
+            List<string> objExpected = new List<string>();
+
+            foreach(TableRow objRow in table.Rows)
+            {
+                objExpected.Add(objRow["TEL"]);
+            }
+
+            CollectionAssert.AreEqual(objExpected, objActual.TEL );
+        }
+
 
     }
 }
