@@ -13,7 +13,7 @@ namespace Magikarp.Utility.TransitData
     /// </summary>
     /// <remarks>
     /// Author: 黃竣祥
-    /// Version: 20171020
+    /// Version: 20171025
     /// </remarks>
     public class TransitDataAdapter : ITransitDataAdapter<string>, ITransitDataAdapter<XElement>, ITransitDataAdapter<object>
     {
@@ -152,7 +152,8 @@ namespace Magikarp.Utility.TransitData
         /// <remarks>
         /// Author: 黃竣祥
         /// Time: 2017/09/21
-        /// History: N/A
+        /// History: 
+        ///     未提供對應的轉換器就忽略該屬性，避免物件缺少例外。(黃竣祥 2017/10/25)
         /// DB Object: N/A      
         /// </remarks>
         public TModel Loading<TModel>(XElement pi_objSource) where TModel : new()
@@ -177,8 +178,11 @@ namespace Magikarp.Utility.TransitData
 
                         if (string.IsNullOrEmpty(sTagName)) { sTagName = objProperty.Name; }
 
-                        objConverter.Successor = objDefaultConverter;
-                        objConverter.SetValue(objReturn, objProperty, pi_objSource.Element(sTagName));
+                        if(objConverter != null)
+                        {
+                            objConverter.Successor = objDefaultConverter;
+                            objConverter.SetValue(objReturn, objProperty, pi_objSource.Element(sTagName));
+                        }                      
                     }
                 }
             }
@@ -329,6 +333,7 @@ namespace Magikarp.Utility.TransitData
         /// Author: 黃竣祥
         /// Time: 2017/09/21
         /// History: N/A
+        ///     未提供對應的轉換器就忽略該屬性，避免物件缺少例外。(黃竣祥 2017/10/25)
         /// DB Object: N/A      
         /// </remarks>
         private XElement ExportToXElement<TModel>(TModel pi_objSource)
@@ -343,12 +348,15 @@ namespace Magikarp.Utility.TransitData
                     XElement objChild = null;
                     IDataConverter<XElement> objConverter = this.FindConverter(objProperty);
 
-                    objConverter.Successor = objEmptyConverter;
-                    objChild = objConverter.Export(pi_objSource, objProperty);
-                    if (objChild != null)
+                    if(objConverter != null)
                     {
-                        objRoot.Add(objChild);
-                    }
+                        objConverter.Successor = objEmptyConverter;
+                        objChild = objConverter.Export(pi_objSource, objProperty);
+                        if (objChild != null)
+                        {
+                            objRoot.Add(objChild);
+                        }
+                    }                   
                 }
             }
             return objRoot;
