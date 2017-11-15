@@ -14,7 +14,7 @@ Scenario: 轉換 Employee 資料物件為字串中介資料
 	  <Name>Tomozou Huang</Name>
 	  <Level>1</Level>
 	  <Title>Staff</Title>
-	  <TEL Type="System.String">
+	  <TEL Type="String">
 		<Item>abc</Item>
 		<Item>def</Item>
 	  </TEL>

@@ -94,7 +94,7 @@ this.ScenarioSetup(scenarioInfo);
   <Name>Tomozou Huang</Name>
   <Level>1</Level>
   <Title>Staff</Title>
-  <TEL Type=""System.String"">
+  <TEL Type=""String"">
 	<Item>abc</Item>
 	<Item>def</Item>
   </TEL>
