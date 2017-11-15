@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\TransitDataUT"
+    "\\TransitData",
+    "\\TransitData\\_Source"
   ],
-  "SelectedNode": "\\TransitDataUT\\App.config",
+  "SelectedNode": "\\TransitData\\_Source\\TransitDataAdapter.cs",
   "PreviewInSolutionExplorer": false
 }

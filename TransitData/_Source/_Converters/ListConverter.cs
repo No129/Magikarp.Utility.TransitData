@@ -15,7 +15,7 @@ namespace Magikarp.Utility.TransitData
     /// </summary>
     /// <remarks>
     /// Author: 黃竣祥
-    /// Version: 20171020
+    /// Version: 20171115
     /// </remarks>
     public class ListConverter : BaseConverter
     {
@@ -82,11 +82,17 @@ namespace Magikarp.Utility.TransitData
         /// <param name="pi_objProperty">待匯出屬性物件。</param>
         /// <returns>指定型別的中介資料。</returns>
         /// <remarks>
-        /// Author: 黃竣祥
-        /// Time: 2017/10/20
-        /// History: 
-        ///     調整設值方式並新增 Boolean 項目。 (黃竣祥 2017/10/20)
-        /// DB Object: N/A      
+        /// <list type="bullet">
+        /// <item><term>Author:</term><description>黃竣祥</description></item>        
+        /// <item><term>History</term><description>
+        /// <list type="number">
+        /// <item><term>2017/10/20</term><description>建立方法。(黃竣祥）</description></item>
+        /// <item><term>2017/10/20</term><description>調整設值方式並新增 Boolean 項目。(黃竣祥）</description></item>
+        /// <item><term>2017/11/15</term><description>增加檢查以避免缺少物件錯誤。(黃竣祥）</description></item>
+        /// </list>
+        /// </description>
+        /// </item>
+        /// </list>
         /// </remarks>
         public override XElement Export(object pi_objContainer, PropertyInfo pi_objProperty)
         {
@@ -149,10 +155,13 @@ namespace Magikarp.Utility.TransitData
                                         List<XElement> objXElementList = (List<XElement>)pi_objProperty.GetValue(pi_objContainer, System.Reflection.BindingFlags.Default, null, null, null);
 
                                         objReturn = new XElement(sTagName, new XAttribute("Type", "System.Xml.Linq.XElement"));
-                                        foreach (XElement objItem in objXElementList)
+                                        if(objXElementList != null)
                                         {
-                                            objReturn.Add(new XElement("Item", new XCData(objItem.ToString())));
-                                        }
+                                            foreach (XElement objItem in objXElementList)
+                                            {
+                                                objReturn.Add(new XElement("Item", new XCData(objItem.ToString())));
+                                            }
+                                        }                                       
                                         break;
                                 }
 
